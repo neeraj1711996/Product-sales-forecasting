@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Sales Forecasting API</title></head>
+<body>
+  <h2>Product Sales Predictor</h2>
+  <input id="store_id" placeholder="Store ID (e.g. 1)" />
+  <input id="orders" placeholder="Number of Orders" />
+  <button onclick="predict()">Predict Sales</button>
+  <h3 id="result"></h3>
+
+  <script>
+    async function predict() {
+      const res = await fetch('/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          Store_id: document.getElementById('store_id').value,
+          Store_Type: 1, Location_Type: 1, Region_Code: 1,
+          Holiday: 0, Discount: 1,
+          Order: document.getElementById('orders').value,
+          Month: 5, DayOfWeek: 2, WeekOfYear: 20, IsWeekend: 0
+        })
+      });
+      const data = await res.json();
+      document.getElementById('result').innerText 
+        = 'Predicted Sales: ₹' + data.predicted_sales;
+    }
+  </script>
+</body>
+</html>
