@@ -1,23 +1,23 @@
 from flask import Flask, request, jsonify, render_template
 import joblib
 import numpy as np
-import pandas as pd
 
 app = Flask(__name__)
 
-# Load model once at startup
+# Load model once when server starts
 model = joblib.load('model.pkl')
 
+# Route 1: Home page
 @app.route('/')
 def home():
     return render_template('index.html')
 
+# Route 2: Prediction API endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
     
-    # Extract features in the same order as training
-    features = [
+    features = [[
         data['Store_id'],
         data['Store_Type'],
         data['Location_Type'],
@@ -29,9 +29,9 @@ def predict():
         data['DayOfWeek'],
         data['WeekOfYear'],
         data['IsWeekend']
-    ]
+    ]]
     
-    prediction = model.predict([features])[0]
+    prediction = model.predict(features)[0]
     
     return jsonify({
         'predicted_sales': round(float(prediction), 2),
